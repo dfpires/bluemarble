@@ -51,7 +51,7 @@ build cmake_object_order_depends_target_BlueMarbleCC: phony || CMakeFiles\BlueMa
 
 build CMakeFiles\BlueMarbleCC.dir\main.cpp.obj: CXX_COMPILER__BlueMarbleCC_Debug C$:\Users\Daniel\Documents\bluemarble-cc\main.cpp || cmake_object_order_depends_target_BlueMarbleCC
   FLAGS = /DWIN32 /D_WINDOWS /W3 /GR /EHsc /MDd /Zi /Ob0 /Od /RTC1
-  INCLUDES = -IC:\Users\Daniel\Documents\bluemarble-cc\deps\glm
+  INCLUDES = -IC:\Users\Daniel\Documents\bluemarble-cc\deps\glm -IC:\Users\Daniel\Documents\bluemarble-cc\deps\stb -IC:\Users\Daniel\Documents\bluemarble-cc\deps\glfw\include -IC:\Users\Daniel\Documents\bluemarble-cc\deps\glew\include
   OBJECT_DIR = CMakeFiles\BlueMarbleCC.dir
   OBJECT_FILE_DIR = CMakeFiles\BlueMarbleCC.dir
   TARGET_COMPILE_PDB = CMakeFiles\BlueMarbleCC.dir\
@@ -68,9 +68,10 @@ build CMakeFiles\BlueMarbleCC.dir\main.cpp.obj: CXX_COMPILER__BlueMarbleCC_Debug
 build BlueMarbleCC.exe: CXX_EXECUTABLE_LINKER__BlueMarbleCC_Debug CMakeFiles\BlueMarbleCC.dir\main.cpp.obj
   FLAGS = /DWIN32 /D_WINDOWS /W3 /GR /EHsc /MDd /Zi /Ob0 /Od /RTC1
   LINK_FLAGS = /machine:x64 /debug /INCREMENTAL /subsystem:console
-  LINK_LIBRARIES = kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib
+  LINK_LIBRARIES = glfw3.lib  glew32.lib  kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib
+  LINK_PATH = -LIBPATH:C:\Users\Daniel\Documents\bluemarble-cc\deps\glfw\lib-vc2022   -LIBPATH:C:\Users\Daniel\Documents\bluemarble-cc\deps\glew\lib\Release\x64
   OBJECT_DIR = CMakeFiles\BlueMarbleCC.dir
-  POST_BUILD = cd .
+  POST_BUILD = cmd.exe /C "cd /D C:\Users\Daniel\Documents\bluemarble-cc\out\build\x64-Debug && "C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe" -E copy C:/Users/Daniel/Documents/bluemarble-cc/deps/glew/bin/Release/x64/glew32.dll C:/Users/Daniel/Documents/bluemarble-cc/out/build/x64-Debug/glew32.dll"
   PRE_LINK = cd .
   TARGET_COMPILE_PDB = CMakeFiles\BlueMarbleCC.dir\
   TARGET_FILE = BlueMarbleCC.exe

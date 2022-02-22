@@ -2,11 +2,11 @@
   "ExpandedNodes": [
     "",
     "\\deps",
-    "\\deps\\glm",
+    "\\deps\\glfw\\include\\GLFW",
     "\\deps\\glm\\glm",
     "\\out",
     "\\out\\build"
   ],
-  "SelectedNode": "\\deps\\glm\\glm\\glm.hpp",
+  "SelectedNode": "\\main.cpp",
   "PreviewInSolutionExplorer": false
 }
