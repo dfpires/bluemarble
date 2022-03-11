@@ -1,22 +1,24 @@
 cmake_minimum_required(VERSION 3.12)
 
-project(BlueMarbleCC)
+project(BlueMarble)
 
-add_executable(BlueMarbleCC main.cpp)
+add_executable(BlueMarble main.cpp)
 
-target_include_directories(BlueMarbleCC PRIVATE deps/glm
-                                                deps/stb
-                                                deps/glfw/include
-                                                deps/glew/include)
+add_executable(Vectors Vectors.cpp)
 
-target_link_directories(BlueMarbleCC PRIVATE deps/glfw/lib-vc2022
-                                             deps/glew/lib/Release/x64)
+target_include_directories(Vectors PRIVATE deps/glm)
 
-target_link_libraries(BlueMarbleCC PRIVATE glfw3.lib
-                                           glew32.lib)
+target_include_directories(BlueMarble PRIVATE deps/glm
+                                              deps/stb
+                                              deps/glfw/include
+                                              deps/glew/include)
 
-add_custom_command(TARGET BlueMarbleCC POST_BUILD
-   COMMAND ${CMAKE_COMMAND} -E copy "${CMAKE_SOURCE_DIR}/deps/glew/bin/Release/x64/glew32.dll" "${CMAKE_BINARY_DIR}/glew32.dll")
+target_link_directories(BlueMarble PRIVATE deps/glfw/lib-vc2022
+                                           deps/glew/lib/Release/x64)
 
+target_link_libraries(BlueMarble PRIVATE glfw3.lib
+                                         glew32.lib
+                                         opengl32.lib)
 
-
+add_custom_command(TARGET BlueMarble POST_BUILD
+                   COMMAND ${CMAKE_COMMAND} -E copy "${CMAKE_SOURCE_DIR}/deps/glew/bin/Release/x64/glew32.dll" "${CMAKE_BINARY_DIR}/glew32.dll")

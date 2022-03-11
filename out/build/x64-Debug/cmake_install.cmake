@@ -1,8 +1,8 @@
-# Install script for directory: C:/Users/Daniel/Documents/bluemarble-cc
+# Install script for directory: C:/Users/Daniel/Documents/bluemarble
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
-  set(CMAKE_INSTALL_PREFIX "C:/Users/Daniel/Documents/bluemarble-cc/out/install/x64-Debug")
+  set(CMAKE_INSTALL_PREFIX "C:/Users/Daniel/Documents/bluemarble/out/install/x64-Debug")
 endif()
 string(REGEX REPLACE "/$" "" CMAKE_INSTALL_PREFIX "${CMAKE_INSTALL_PREFIX}")
 
@@ -40,5 +40,5 @@ endif()
 
 string(REPLACE ";" "\n" CMAKE_INSTALL_MANIFEST_CONTENT
        "${CMAKE_INSTALL_MANIFEST_FILES}")
-file(WRITE "C:/Users/Daniel/Documents/bluemarble-cc/out/build/x64-Debug/${CMAKE_INSTALL_MANIFEST}"
+file(WRITE "C:/Users/Daniel/Documents/bluemarble/out/build/x64-Debug/${CMAKE_INSTALL_MANIFEST}"
      "${CMAKE_INSTALL_MANIFEST_CONTENT}")
