@@ -6,7 +6,12 @@ add_executable(BlueMarble main.cpp)
 
 add_executable(Vectors Vectors.cpp)
 
+add_executable(Matrices Matrices.cpp)
+
+target_include_directories(Matrices PRIVATE deps/glm)
+
 target_include_directories(Vectors PRIVATE deps/glm)
+
 
 target_include_directories(BlueMarble PRIVATE deps/glm
                                               deps/stb

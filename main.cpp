@@ -60,7 +60,7 @@ int main() {
 	glBufferData(GL_ARRAY_BUFFER, sizeof(Triangle), Triangle.data(), GL_STATIC_DRAW);
 
 	
-		// Define a cor de fundo
+	// Define a cor de fundo
 	glClearColor(1.0f, 0.0f, 0.0f, 1.0);
 
 	while (!glfwWindowShouldClose(Window)) {

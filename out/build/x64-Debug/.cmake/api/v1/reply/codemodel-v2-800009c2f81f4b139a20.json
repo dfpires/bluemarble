@@ -1,0 +1,78 @@
+{
+	"configurations" : 
+	[
+		{
+			"directories" : 
+			[
+				{
+					"build" : ".",
+					"jsonFile" : "directory-.-Debug-d0094a50bb2071803777.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.12"
+					},
+					"projectIndex" : 0,
+					"source" : ".",
+					"targetIndexes" : 
+					[
+						0,
+						1,
+						2
+					]
+				}
+			],
+			"name" : "Debug",
+			"projects" : 
+			[
+				{
+					"directoryIndexes" : 
+					[
+						0
+					],
+					"name" : "BlueMarble",
+					"targetIndexes" : 
+					[
+						0,
+						1,
+						2
+					]
+				}
+			],
+			"targets" : 
+			[
+				{
+					"directoryIndex" : 0,
+					"id" : "BlueMarble::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-BlueMarble-Debug-338f0b8c3c01877786e6.json",
+					"name" : "BlueMarble",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "Matrices::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-Matrices-Debug-a784351918420724d457.json",
+					"name" : "Matrices",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "Vectors::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-Vectors-Debug-521f3f29e078fe5630a7.json",
+					"name" : "Vectors",
+					"projectIndex" : 0
+				}
+			]
+		}
+	],
+	"kind" : "codemodel",
+	"paths" : 
+	{
+		"build" : "C:/Users/Daniel/Documents/bluemarble/out/build/x64-Debug",
+		"source" : "C:/Users/Daniel/Documents/bluemarble"
+	},
+	"version" : 
+	{
+		"major" : 2,
+		"minor" : 3
+	}
+}
