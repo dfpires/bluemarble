@@ -90,7 +90,7 @@ void RotationMatrix() {
 	glm::vec3 Axis{ 0,0,1 }; // eixo de rotação z
 	// cria a matriz de rotação
 	glm::mat4 Rotation = glm::rotate(I, Angle, Axis);
-
+	PrintMatrix(Rotation);
 	// cria o vetor de posição
 	glm::vec4 Position{ 100, 0, 0, 1 };
 	glm::vec4 Direction{ 100, 0, 0, 0 };
@@ -105,10 +105,104 @@ void RotationMatrix() {
 	std::cout << glm::to_string(Direction) << std::endl;
 }
 
+
+void ComposedMatrices() {
+	// pula linha
+	std::cout << std::endl;
+	// mensagem
+	std::cout << "Composed Matrix" << std::endl;
+	// matriz de identidade
+	glm::mat4 I = glm::identity<glm::mat4>();
+	// matriz de translação
+	glm::vec3 T{ 0, 10, 0 }; // desloca 10 em y
+	glm::mat4 TranslationMatrix = glm::translate(I, T);
+	std::cout << "Translation Matrix" << std::endl;
+	PrintMatrix(TranslationMatrix);
+	// matriz de rotação
+	// converte angulos em radianos - 0.79 radianos
+	constexpr float Angle = glm::radians(90.0f); // ângulo de rotação 45
+	glm::vec3 Axis{ 0,0,1 }; // eixo de rotação
+	glm::mat4 RotationMatrix = glm::rotate(I, Angle, Axis);
+	std::cout << "Rotation Matrix" << std::endl;
+	PrintMatrix(RotationMatrix);
+	// matriz de escala
+	glm::vec3 ScaleAmount(2, 2, 0); // dobra largura e dobra altura
+	glm::mat4 ScaleMatrix = glm::scale(I, ScaleAmount);
+	std::cout << "Scale Matrix" << std::endl;
+	PrintMatrix(ScaleMatrix);
+	// cria um vetor de posição
+	glm::vec4 Position(1, 1, 0, 1);
+	// cria um vetor de direção
+	glm::vec4 Direction(1, 1, 0, 0);
+
+	// primeiro escala, segundo rotaciona e depois translada
+	// multiplicação de matrizes não é comutativa, a ordem importa
+	// opera da direita para a esquerda
+	glm::mat4 ModelMatrix =
+	TranslationMatrix * RotationMatrix * ScaleMatrix;
+	std::cout << "Model Matriz" << std::endl;
+	PrintMatrix(ModelMatrix);
+
+	// não devemos fazer assim - muito processamento
+	Position = ScaleMatrix * Position;
+	std::cout << glm::to_string(Position) << std::endl;
+	Position = RotationMatrix * Position;
+	std::cout << glm::to_string(Position) << std::endl;
+	Position = TranslationMatrix * Position;
+	std::cout << glm::to_string(Position) << std::endl;
+
+	// aplicando a composição no vetor de posição
+	//Position = ModelMatrix * Position;
+	//std::cout << glm::to_string(Position) << std::endl;
+	//Direction = ModelMatrix * Direction;
+	///std::cout << glm::to_string(Direction) << std::endl;
+}
+
+void ModelViewProjection()
+{
+	std::cout << std::endl;
+	std::cout << "==========================" << std::endl;
+	std::cout << "Model, View and Projection" << std::endl;
+	std::cout << "==========================" << std::endl;
+
+	// Model é a matriz formada pelas transformações de 
+	// Escala, Rotação e Translação!
+	glm::mat4 Model = glm::identity<glm::mat4>();
+
+	// View - onde está a câmera para ver o modelo
+	glm::vec3 Eye{ 0.0f, 0.0f, 10.0f };
+	glm::vec3 Center{ 0.0f, 0.0f, 0.0 };
+	glm::vec3 Up{ 0.0f, 1.0f, 0.0f };
+	glm::mat4 View = glm::lookAt(Eye, Center, Up);
+
+	std::cout << "View: " << std::endl;
+	PrintMatrix(View);
+
+	constexpr float FoV = glm::radians(45.0f);
+	const float AspectRatio = 800.0f / 600.0f;
+	const float Near = 0.001f;
+	const float Far = 1000.0f;
+	glm::mat4 Projection = glm::perspective(FoV, AspectRatio, Near, Far);
+
+	std::cout << "Projection: " << std::endl;
+	PrintMatrix(Projection);
+
+	glm::mat4 ModelViewProjection = Projection * View * Model;
+
+	std::cout << "ModelViewProjection: " << std::endl;
+	PrintMatrix(ModelViewProjection);
+
+	glm::vec4 Position{ 0, 0, 0, 1 };
+	Position = ModelViewProjection * Position;
+	std::cout << glm::to_string(Position) << std::endl;
+}
+
 int main() {
 	
 	std::cout << "Olá matrizes" << std::endl;
 	//TranslationMatrix();
 	//ScaleMatrix();
-	RotationMatrix();
+	// RotationMatrix();
+	// ComposedMatrices();
+	ModelViewProjection();
 }
