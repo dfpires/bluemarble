@@ -169,18 +169,24 @@ void ModelViewProjection()
 	// Escala, Rotação e Translação!
 	glm::mat4 Model = glm::identity<glm::mat4>();
 
-	// View - onde está a câmera para ver o modelo
-	glm::vec3 Eye{ 0.0f, 0.0f, 10.0f };
-	glm::vec3 Center{ 0.0f, 0.0f, 0.0 };
-	glm::vec3 Up{ 0.0f, 1.0f, 0.0f };
+	// Matrix View - onde está a câmera para ver o modelo
+	// onde a câmera virtual está
+	glm::vec3 Eye{ 0.0f, 0.0f, 10.0f }; // posição
+	glm::vec3 Center{ 0.0f, 0.0f, 0.0 }; // direção
+	// 0.0f, -1.0f, 0.0f // vendo de cabeça pra baixo
+	glm::vec3 Up{ 0.0f, 1.0f, 0.0f }; // orientação
 	glm::mat4 View = glm::lookAt(Eye, Center, Up);
 
 	std::cout << "View: " << std::endl;
 	PrintMatrix(View);
 
+	// angulo de visão - 45o.
 	constexpr float FoV = glm::radians(45.0f);
+	// razão de aspecto
 	const float AspectRatio = 800.0f / 600.0f;
+	// distância do plano perto da câmera
 	const float Near = 0.001f;
+	// distância do plano longe da câmera
 	const float Far = 1000.0f;
 	glm::mat4 Projection = glm::perspective(FoV, AspectRatio, Near, Far);
 
@@ -194,6 +200,8 @@ void ModelViewProjection()
 
 	glm::vec4 Position{ 0, 0, 0, 1 };
 	Position = ModelViewProjection * Position;
+	std::cout << glm::to_string(Position) << std::endl;
+	Position = Position / Position.w;
 	std::cout << glm::to_string(Position) << std::endl;
 }
 

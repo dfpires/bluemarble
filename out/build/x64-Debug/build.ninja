@@ -71,7 +71,7 @@ build BlueMarble.exe: CXX_EXECUTABLE_LINKER__BlueMarble_Debug CMakeFiles\BlueMar
   LINK_LIBRARIES = glfw3.lib  glew32.lib  opengl32.lib  kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib
   LINK_PATH = -LIBPATH:C:\Users\Daniel\Documents\bluemarble\deps\glfw\lib-vc2022   -LIBPATH:C:\Users\Daniel\Documents\bluemarble\deps\glew\lib\Release\x64
   OBJECT_DIR = CMakeFiles\BlueMarble.dir
-  POST_BUILD = cmd.exe /C "cd /D C:\Users\Daniel\Documents\bluemarble\out\build\x64-Debug && "C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe" -E copy C:/Users/Daniel/Documents/bluemarble/deps/glew/bin/Release/x64/glew32.dll C:/Users/Daniel/Documents/bluemarble/out/build/x64-Debug/glew32.dll"
+  POST_BUILD = cmd.exe /C "cd /D C:\Users\Daniel\Documents\bluemarble\out\build\x64-Debug && "C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe" -E copy C:/Users/Daniel/Documents/bluemarble/deps/glew/bin/Release/x64/glew32.dll C:/Users/Daniel/Documents/bluemarble/out/build/x64-Debug/glew32.dll && "C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe" -E create_symlink C:/Users/Daniel/Documents/bluemarble/shaders C:/Users/Daniel/Documents/bluemarble/out/build/x64-Debug/shaders"
   PRE_LINK = cd .
   TARGET_COMPILE_PDB = CMakeFiles\BlueMarble.dir\
   TARGET_FILE = BlueMarble.exe

@@ -1,6 +1,10 @@
 {
   "ExpandedNodes": [
-    ""
+    "",
+    "\\out",
+    "\\out\\build",
+    "\\shaders"
   ],
+  "SelectedNode": "\\shaders\\triangle_vert.glsl",
   "PreviewInSolutionExplorer": false
 }
