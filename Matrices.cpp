@@ -210,7 +210,7 @@ int main() {
 	std::cout << "Olá matrizes" << std::endl;
 	//TranslationMatrix();
 	//ScaleMatrix();
-	// RotationMatrix();
-	// ComposedMatrices();
+	//RotationMatrix();
+	//ComposedMatrices();
 	ModelViewProjection();
 }

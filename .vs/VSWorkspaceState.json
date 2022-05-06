@@ -1,9 +1,8 @@
 {
   "ExpandedNodes": [
     "",
-    "\\out",
-    "\\out\\build",
-    "\\shaders"
+    "\\textures"
   ],
+  "SelectedNode": "\\textures\\earth_2k.jpg",
   "PreviewInSolutionExplorer": false
 }

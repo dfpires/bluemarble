@@ -11,6 +11,9 @@
 #include <GLFW/glfw3.h>
 #include <fstream>
 
+#define STB_IMAGE_IMPLEMENTATION
+#include <stb_image.h> // biblioteca para carregar imagens
+
 const int Width = 800;
 const int Height = 600;
 
@@ -123,6 +126,68 @@ GLuint LoadShaders(const char* VertexShaderFile, const char* FragmentShaderFile)
 	return ProgramId; // retorna o programa conteúdo o Vertex e o Fragment Shaders
 
 }
+
+// criamos um tipo de dados contendo um vetor de posição e um vetor de cores
+struct Vertex {
+	glm::vec3 Position; // layout 0
+	glm::vec3 Color; // layout 1
+	glm::vec2 UV;// layout 2	
+};
+
+// carrega o arquivo contendo a textura
+GLuint LoadTexture(const char* TextureFile)
+{
+	std::cout << "Carregando Textura " << TextureFile << std::endl;
+
+	// giro na vertical
+	stbi_set_flip_vertically_on_load(true);
+	// largura da textura
+	int TextureWidth = 0;
+	// altura da textura
+	int TextureHeight = 0;
+	// número de componentes
+	int NumberOfComponents = 0;
+
+	// stbi -> biblioteca em C++ para carregar arquivos do tipo imagem
+	unsigned char* TextureData = stbi_load(TextureFile, &TextureWidth, &TextureHeight, 
+		&NumberOfComponents, 3);
+
+	// verifica se deu erro, caso sim, saiu do programa
+	assert(TextureData);
+
+	// Gerar o Identifador da Textura para enviar para a GPU
+	GLuint TextureId;
+	glGenTextures(1, &TextureId);
+
+	// Habilita a textura para ser modificada
+	glBindTexture(GL_TEXTURE_2D, TextureId);
+
+	// Copia a textura para a memória da GPU
+	GLint Level = 0;
+	GLint Border = 0;
+	glTexImage2D(GL_TEXTURE_2D, Level, GL_RGB, TextureWidth, TextureHeight, Border, 
+		GL_RGB, GL_UNSIGNED_BYTE, TextureData);
+
+	// filtro de magnificação - mais suave quando está fazendo ZOOM na imagem
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	// filtro de mimificação - para não ter problema de aliasing
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+	// caso não cubra toda a imagem
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+	
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+
+	// gerar o mipmap a partir da textura
+	glGenerateMipmap(GL_TEXTURE_2D);
+
+	glBindTexture(GL_TEXTURE_2D, 0); // desabilita a textura
+
+	stbi_image_free(TextureData); // libera a memória
+
+	return TextureId;
+}
+
+
 int main() {
 
 	glfwInit();
@@ -156,11 +221,38 @@ int main() {
 	// cria um programa composto de vertex shader e do fragment shader
 	GLuint ProgramId = LoadShaders("shaders/triangle_vert.glsl", "shaders/triangle_frag.glsl");
 	
-	// define um triângilo em coordenadas normalizadas
-	std::array<glm::vec3, 3> Triangle = {
-		glm::vec3{-1.0f, -1.0f, 0.0f},
-		glm::vec3{ 1.0f, -1.0f, 0.0f},
-		glm::vec3{ 0.0f,  1.0f, 0.0f},
+
+	// define um triângulo em coordenadas normalizadas
+	// array do tipo Vertex, onde cada elemento do array será um Vertex, que contém
+	// um vetor de posição e um vetor de cores
+	// a variável mudou de nome, para Quad -> quadrado
+	// 3 foi alterado para 6
+	std::array<Vertex, 6> Quad = {
+		// I
+		Vertex { glm::vec3{-1.0f, -1.0f, 0.0f}, 
+				 glm::vec3{1.0f, 0.0f, 0.0f}, 
+				 glm::vec2{0.0f, 0.0f}},
+		// II
+		Vertex { glm::vec3{ 1.0f, -1.0f, 0.0f}, 
+				 glm::vec3{0.0f, 1.0f, 0.0f}, 
+				 glm::vec2{1.0f, 0.0f}},
+		
+		// III 
+		Vertex { glm::vec3{ -1.0f,  1.0f, 0.0f}, 
+				 glm::vec3{0.0f, 0.0f, 1.0f}, 
+				 glm::vec2{0.0f, 1.0f}},
+		// III
+		Vertex { glm::vec3{ -1.0f,  1.0f, 0.0f},
+				 glm::vec3{0.0f, 0.0f, 1.0f},
+				 glm::vec2{0.0f, 1.0f}},
+		// II
+		Vertex { glm::vec3{ 1.0f, -1.0f, 0.0f},
+				 glm::vec3{0.0f, 1.0f, 0.0f},
+				 glm::vec2{1.0f, 0.0f}},
+		// IV
+		Vertex { glm::vec3{ 1.0f, 1.0f, 0.0f},
+				 glm::vec3{1.0f, 0.0f, 0.0f},
+				 glm::vec2{1.0f, 1.0f}},
 	};
 	
 	// Model View Projection
@@ -184,16 +276,20 @@ int main() {
 	// ModelViewProjection
 	glm::mat4 ModelViewProjection = Projection * View * Model;
 
-	// Aplicar a ModelViewProjection nos vértices do triângulo
-	for (glm::vec3& Vertex : Triangle) {
+	/* // Aplicar a ModelViewProjection nos vértices do triângulo
+	// para cada Vertex do array -> CPU
+	//for (Vertex& Vertex : Triangle) {
 		// precisamos tranformar vec3 em vec4
-		glm::vec4 ProjectedVertex = ModelViewProjection *  glm::vec4{ Vertex, 1.0f };
+//		glm::vec4 ProjectedVertex = 
+			ModelViewProjection *  glm::vec4{ Vertex.Position, 1.0f };
 		// transformando o ProjectedVertex em coordenadas normalizada - 0 e 1
 		// dividir x, y e z por w garante que as coordenadas estejam entre 0 e 1
 		ProjectedVertex /= ProjectedVertex.w;
 		// colocamos a alteração no Vertex
-		Vertex = ProjectedVertex;
+		Vertex.Position = ProjectedVertex;
 	}
+	*/
+
 	// vamos copiar os vértices do triangulo para a memória da GPU
 	GLuint VertexBuffer;
 
@@ -205,11 +301,13 @@ int main() {
 
 
 	// copia os dados para a memória de vídeo
-	glBufferData(GL_ARRAY_BUFFER, sizeof(Triangle), Triangle.data(), GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(Quad), Quad.data(), GL_STATIC_DRAW);
 
+	// Carregar a Textura para a Memória de Vídeo
+	GLuint TextureId = LoadTexture("textures/earth_2k.jpg");
 	
 	// Define a cor de fundo
-	glClearColor(1.0f, 0.0f, 0.0f, 1.0);
+	glClearColor(0.3f, 0.3f, 0.3f, 1.0);
 
 	while (!glfwWindowShouldClose(Window)) {
 		// glClear vai limpar o framebuffer. GL_COLOR_BUFFER_BIT diz para limpar o buffer de
@@ -220,22 +318,54 @@ int main() {
 
 		// ativar o programa do shader
 		glUseProgram(ProgramId);
-		// o 0 indica a posição do shader atual de entrada
+
+		// processamento sendo executado na GPU
+		// obtemos a localização do uniforme ModelViewProjection
+		GLint ModelViewProjectionLoc = 
+			glGetUniformLocation(ProgramId, "ModelViewProjection");
+		// insere o uniforme na GPU
+		glUniformMatrix4fv(ModelViewProjectionLoc, 
+			1, 
+			GL_FALSE, 
+			glm::value_ptr(ModelViewProjection));
+
+		// ativa a TEXTURE0
+		glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_2D, TextureId);
+
+		GLint TextureSamplerLoc = glGetUniformLocation(ProgramId, "TextureSampler");
+		glUniform1i(TextureSamplerLoc, 0);
+	
+			// o 0 indica o layout de posição
 		glEnableVertexAttribArray(0);
+		// o 1 indica o layou de cores
+		glEnableVertexAttribArray(1);
+		// o 2 indica coordenada de textura
+		glEnableVertexAttribArray(2);
 
 		// informa ao OpenGL que VertexBuffer será o ativo no momento
 		glBindBuffer(GL_ARRAY_BUFFER, VertexBuffer);
 
 		// informa ao OpenGL onde, dentro do vertex buffer, os vértices estão
 		// array é contíguoa em memória, basta dizer quantos vértices serão utilizados
-		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, nullptr);
+		// sizeof(Vertex) é o stride - 24
+		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), nullptr);
+		// offsetof(Vertex) é o offset - 12
+		glVertexAttribPointer(1, 3, GL_FLOAT, GL_TRUE, sizeof(Vertex), 
+			reinterpret_cast<void*> (offsetof(Vertex, Color)));
+
+		glVertexAttribPointer(2, 2, GL_FLOAT, GL_TRUE, sizeof(Vertex),
+			reinterpret_cast<void*> (offsetof(Vertex, UV)));
+
 
 		// finalmente dispara o OpenGL e desenha triangulo no vertex buffer
-		glDrawArrays(GL_TRIANGLES, 0, 3);
+		glDrawArrays(GL_TRIANGLES, 0, Quad.size());
 
 		// reverte o estado criado
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
 		glDisableVertexAttribArray(0);
+		glDisableVertexAttribArray(1);
+		glDisableVertexAttribArray(2);
 
 		glUseProgram(0);
 		// processo todos os eventos da fila de eventos do GLFW
